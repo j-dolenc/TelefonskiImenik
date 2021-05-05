@@ -7,7 +7,7 @@ import java.util.Scanner;
 
 public class Main {
 
-    public static void main(String[] args) {
+    public static void main(String[] args) throws ClassNotFoundException{
 
         TelefonskiImenik telefonskiImenik = new TelefonskiImenik();
 
@@ -62,14 +62,14 @@ public class Main {
                     System.out.print("Vpisite ID kontakta, ki ga zelite urediti:");
                     int idKontakta = Integer.parseInt(in.next());
                     System.out.println(idKontakta);
-
+                    //TODO: if ne obstaja print urejanje neuspesno
                     Kontakt oseba = new Kontakt();
                     oseba.setId(idKontakta);
-                    Kontakt k = new Kontakt();
+                    //Kontakt k = new Kontakt();
                     for(Kontakt kontakt : telefonskiImenik.getSeznam()){
                         if(oseba.getId() == kontakt.getId()){
                             oseba=kontakt;
-                            k=kontakt;
+                            //k=kontakt;
                         }
                     }
 

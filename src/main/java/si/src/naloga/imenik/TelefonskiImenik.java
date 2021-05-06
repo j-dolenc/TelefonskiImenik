@@ -4,14 +4,14 @@ import si.src.naloga.kontakt.Kontakt;
 
 import java.util.ArrayList;
 import java.util.List;
-
-
-
+import java.io.FileOutputStream;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
 import java.sql.ResultSet;
 import java.sql.Statement;
+
+import java.io.*;
 
 public class TelefonskiImenik {
 
@@ -51,13 +51,13 @@ public class TelefonskiImenik {
                 oseba.setOpomba("opomba");
                 seznamKontaktov.add(oseba);
                 
-                System.out.println(res.getString("ime"));
-                System.out.println(res.getString("priimek"));
-                System.out.println(res.getString("naslov"));
-                System.out.println(res.getString("elektronskaPosta"));
-                System.out.println(res.getString("telefon"));
-                System.out.println(res.getString("mobilniTelefon"));
-                System.out.println(res.getString("opomba"));
+                // System.out.println(res.getString("ime"));
+                // System.out.println(res.getString("priimek"));
+                // System.out.println(res.getString("naslov"));
+                // System.out.println(res.getString("elektronskaPosta"));
+                // System.out.println(res.getString("telefon"));
+                // System.out.println(res.getString("mobilniTelefon"));
+                // System.out.println(res.getString("opomba"));
             }
         }
         catch(SQLException e){
@@ -149,12 +149,12 @@ public class TelefonskiImenik {
                                                                 +nova.getOpomba()+"')");
             //ResultSet res = statement.executeQuery("select * from kontakti");
             ResultSet res = statement.executeQuery("select id from imenik where ime='"+ nova.getIme() +"'");
-            System.out.println("lalala");
+            //System.out.println("lalala");
             while(res.next()){
                 // System.out.println(res.getString("TABLE_NAME"));
                 //System.out.println(res);
                 nova.setId(res.getInt("id"));
-                System.out.println(nova.getId());
+                //System.out.println(nova.getId());
             }
         }
         catch(SQLException e){
@@ -287,14 +287,97 @@ public class TelefonskiImenik {
      * Ime datoteke naj bo "kontakti.ser"
      */
     public void serializirajSeznamKontaktov() {
-        System.out.println("Metoda se ni implementirana");
+        try {
+            //tukaj nevem kako nastavit pot da mi da access??
+            File file = new File("./src/main/resources/kontakti.ser");
+            if(file.createNewFile()){
+                System.out.println("Ustvarjena datoteka: "+ file.getName());
+            } 
+            else{
+                System.out.println("Datoteka ze obstaja");
+            }
+
+            FileOutputStream file2 = new FileOutputStream(file.getAbsolutePath());
+            ObjectOutputStream out = new ObjectOutputStream(file2);
+            out.writeObject(seznamKontaktov);
+            // for(Kontakt kontakt : seznamKontaktov){
+            //     out.writeObject(kontakt);
+            // }
+            out.close();
+            file2.close();
+            System.out.println("Serializirani podatki so shranjeni v datoteki kontakti.ser"); 
+        } catch (IOException e) {
+            System.err.println(e.getMessage());
+        }
+        //System.out.println("Metoda se ni implementirana");
     }
 
+    // public File ustvariDatoteko(){
+    //     try {
+    //         File file = new File("kontakti.ser");
+    //         if(file.createNewFile()){
+    //             System.out.println("Ustvarjena datoteka: "+ file.getName());
+    //             return file;
+    //         } 
+    //         else{
+    //             System.out.println("Datoteka ze obstaja");
+    //         }
+
+    //     } catch (IOException e) {
+    //         //TODO: handle exception
+    //         System.err.println(e.getMessage());
+    //     }
+    // }
     /**
      * Pereberi serializiran seznam kontaktov iz diska
      */
-    public void naloziSerializiranSeznamKontakotv() {
-        System.out.println("Metoda se ni implementirana");
+    public void naloziSerializiranSeznamKontakotv(String pot) {
+        //System.out.println("Metoda se ni implementirana");
+        //deserializacija
+
+        try {
+            
+            FileInputStream in = new FileInputStream(pot);
+            ObjectInputStream filein = new ObjectInputStream(in);
+            //Object obj;
+            List<Kontakt> deser = (List<Kontakt>)filein.readObject();
+            //obj = filein.readObject();
+            filein.close();
+            //System.out.println(obj.toString());
+            // for(Kontakt kontakt : deser){
+            //     System.out.println(kontakt.toString());
+            // }
+            //v bazo pa pogledat ce ze obstaja in ce ne ga dodaj
+            //pa isto z seznamKontaktov
+            List<Kontakt> neobstojeci = new ArrayList<>();
+            for(Kontakt kontakt : deser){
+                //System.out.println(kontakt.toString());
+                int obstaja =0;
+                for(Kontakt stari : seznamKontaktov){
+
+                    if(stari.equals(kontakt)){
+                        obstaja = 1;
+                    }
+                }
+                if(obstaja == 0){
+                    neobstojeci.add(kontakt);
+                }
+            }
+            for(Kontakt kontakt : neobstojeci){
+                //System.out.println(kontakt.toString());
+                dodajKontakt(kontakt);
+            }
+
+        } catch (IOException e) {
+            //TODO: handle exception
+            System.err.println(e.getMessage());
+        }
+        catch(ClassNotFoundException e){
+            System.err.println(e.getMessage());
+        }
+        
+        
+
     }
 
     /**

@@ -55,6 +55,7 @@ public class Main {
                     novo.setOpomba(in.nextLine());
 
                     telefonskiImenik.dodajKontakt(novo);
+                    System.out.println("Dodajanje osebe "+novo.getIme()+" "+novo.getPriimek() +" uspesno zakljuceno.");
                     break;
                 }
                 case "3": {
@@ -140,6 +141,7 @@ public class Main {
                     break;
                 }
                 case "4": {
+                    telefonskiImenik.izpisiVseKontakte();
                     System.out.print("Prosim napisite ID kontakta, ki ga zelite izbrisati:");
                     int idKontakta = in.nextInt();
                     int truid= -1;
@@ -159,6 +161,7 @@ public class Main {
                     break;
                 }
                 case "5": {
+                    telefonskiImenik.izpisiVseKontakte();
                     System.out.print("Prosim napisite ID kontakta, ki ga zelite izpisati:");
                     int idKontakta = in.nextInt();
                     telefonskiImenik.izpisiKontaktZaId(idKontakta);
@@ -173,7 +176,9 @@ public class Main {
                     break;
                 }
                 case "8": {
-                    telefonskiImenik.naloziSerializiranSeznamKontakotv();
+                    System.out.println("Vpisite pot do .ser datoteke:");
+                    String pot = in.next();
+                    telefonskiImenik.naloziSerializiranSeznamKontakotv(pot);
                     break;
                 }
                 case "9": {
@@ -239,7 +244,7 @@ public class Main {
         System.out.println("6 - Mobilni telefon");
         System.out.println("7 - Opomba");
         System.out.println("");
-        System.out.println("0 - Izhod iz aplikacije");
+        System.out.println("0 - Izhod iz urejanja kontakta");
         System.out.println("----------------------------------");
         System.out.println("Akcija: ");    
     }

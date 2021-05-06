@@ -83,42 +83,6 @@ public class TelefonskiImenik {
         for(Kontakt kontakt : seznamKontaktov){
             System.out.println(kontakt.toString());
         }
-        // try {
-        //     conn = DriverManager.getConnection(url);
-        //     Statement statement = conn.createStatement();
-        //     statement.setQueryTimeout(30);
-        //     //ResultSet res = conn.getMetaData().getTables(null, null, null, null);
-            
-        //     //statement.executeUpdate("create table imenik (id integer primary key, ime string, priimek string, naslov string, elektronskaPosta string, telefon string, mobilniTelefon string, opomba string)");
-        //     //statement.executeUpdate("insert into imenik values (NULL, 'Peter', 'asdak', 'asdasd', 'asdadk@gmail.com', '123241231', '+3867092325', 'aaaaa hehehe')");
-        //     ResultSet res = statement.executeQuery("select * from imenik");
-        //     //System.out.println(res);
-        //     while(res.next()){
-        //         // System.out.println(res.getString("TABLE_NAME"));
-        //         //System.out.println(res);
-                
-        //         //seznamKontaktov.add(oseba);
-                
-        //         System.out.println(res.getString("ime"));
-        //         System.out.println(res.getString("priimek"));
-        //         System.out.println(res.getString("naslov"));
-        //         System.out.println(res.getString("elektronskaPosta"));
-        //         System.out.println(res.getString("telefon"));
-        //         System.out.println(res.getString("mobilniTelefon"));
-        //         System.out.println(res.getString("opomba"));
-        //     }
-        // }
-        // catch(SQLException e){
-        //     System.err.println(e.getMessage());
-        // }
-        // finally {
-        //     try{
-        //         if(conn != null) conn.close();
-        //     }
-        //     catch(SQLException e){
-        //         System.err.println(e);
-        //     }
-        // }
         
     }
 
@@ -311,23 +275,6 @@ public class TelefonskiImenik {
         }
         //System.out.println("Metoda se ni implementirana");
     }
-
-    // public File ustvariDatoteko(){
-    //     try {
-    //         File file = new File("kontakti.ser");
-    //         if(file.createNewFile()){
-    //             System.out.println("Ustvarjena datoteka: "+ file.getName());
-    //             return file;
-    //         } 
-    //         else{
-    //             System.out.println("Datoteka ze obstaja");
-    //         }
-
-    //     } catch (IOException e) {
-    //         //TODO: handle exception
-    //         System.err.println(e.getMessage());
-    //     }
-    // }
     /**
      * Pereberi serializiran seznam kontaktov iz diska
      */
@@ -375,16 +322,53 @@ public class TelefonskiImenik {
         catch(ClassNotFoundException e){
             System.err.println(e.getMessage());
         }
-        
-        
-
     }
 
     /**
      * Izvozi seznam kontaktov v CSV datoteko.
      * Naj uporabnik sam izbere ime izhodne datoteke.
      */
-    public void izvoziPodatkeVCsvDatoteko() {
-        System.out.println("Metoda se ni implementirana");
+    public void izvoziPodatkeVCsvDatoteko(String imeDat) {
+        //System.out.println("Metoda se ni implementirana");
+        try {
+            FileWriter write = new FileWriter("./src/main/resources/" +imeDat);
+            conn = DriverManager.getConnection(url);
+            Statement statement = conn.createStatement();
+            statement.setQueryTimeout(30);
+            ResultSet res = statement.executeQuery("select * from imenik");
+            int stolpci = res.getMetaData().getColumnCount();
+            for(int i = 1; i<=stolpci; i++){
+                write.append(res.getMetaData().getColumnLabel(i));
+                if(i < stolpci) write.append(',');
+                else write.append('\n');
+            }
+            while(res.next()){
+                for(int i = 1; i<=stolpci; i++){
+                    write.append(res.getString(i));
+                    if(i < stolpci) write.append(',');
+                }
+                write.append('\n');
+            }
+            write.flush();
+            write.close();
+            System.out.println("CSV datoteka je shranjena v mapi resources");
+            //statement.executeUpdate("delete from imenik where id='"+id+"'");
+            
+        }
+        catch(SQLException e){
+            System.err.println(e.getMessage());
+        }
+        catch(IOException e){
+            System.err.println(e.getMessage());
+        }
+        finally {
+            try{
+                if(conn != null) conn.close();
+            }
+            catch(SQLException e){
+                System.err.println(e);
+            }
+        }
+        
     }
 }

@@ -182,7 +182,9 @@ public class Main {
                     break;
                 }
                 case "9": {
-                    telefonskiImenik.izvoziPodatkeVCsvDatoteko();
+                    System.out.print("Vpisite zeljeno ime csv datoteke s koncnico .csv: ");
+                    String ime = in.next();
+                    telefonskiImenik.izvoziPodatkeVCsvDatoteko(ime);
                     break;
                 }
                 case "0": {

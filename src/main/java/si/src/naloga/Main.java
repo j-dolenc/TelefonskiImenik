@@ -63,8 +63,11 @@ public class Main {
                     int idKontakta = Integer.parseInt(in.next());
                     System.out.println(idKontakta);
                     //TODO: if ne obstaja print urejanje neuspesno
+                    
+                    
                     Kontakt oseba = new Kontakt();
                     oseba.setId(idKontakta);
+                    //System.out.println(oseba.getIme());
                     //Kontakt k = new Kontakt();
                     for(Kontakt kontakt : telefonskiImenik.getSeznam()){
                         if(oseba.getId() == kontakt.getId()){
@@ -72,7 +75,10 @@ public class Main {
                             //k=kontakt;
                         }
                     }
-
+                    if(oseba.getIme() == null){
+                        System.out.println("Kontakt ne obstaja, urejanje neuspesno!");
+                        break;
+                    }
 
                     String sprememba = "";
                     izpisiUrejanje();
@@ -129,14 +135,27 @@ public class Main {
                     }
                     telefonskiImenik.urediKontakt(oseba);
 
-                    //System.out.println("Urejanje kontakta zakljuceno!");
-                    System.out.println(oseba.toString());
+                    System.out.println("Urejanje kontakta zakljuceno!");
+                    //System.out.println(oseba.toString());
                     break;
                 }
                 case "4": {
                     System.out.print("Prosim napisite ID kontakta, ki ga zelite izbrisati:");
                     int idKontakta = in.nextInt();
+                    int truid= -1;
+                    for(Kontakt kontakt : telefonskiImenik.getSeznam()){
+                        if(idKontakta == kontakt.getId()){
+                            truid=idKontakta;
+                            //k=kontakt;
+                        }
+                    }
+                    if(truid == -1){
+                        System.out.println("Kontakt z id: "+idKontakta+" ne obstaja. Brisanje neuspesno.");
+                        break;
+                    }
+
                     telefonskiImenik.izbrisiKontaktPoId(idKontakta);
+                    System.out.println("Brisanje zakljuceno!");
                     break;
                 }
                 case "5": {

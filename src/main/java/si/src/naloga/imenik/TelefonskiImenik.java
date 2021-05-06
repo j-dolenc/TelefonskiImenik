@@ -232,18 +232,46 @@ public class TelefonskiImenik {
         }
         seznamKontaktov.remove(indeks);
 
+        try {
+            conn = DriverManager.getConnection(url);
+            Statement statement = conn.createStatement();
+            statement.setQueryTimeout(30);
+            
+            statement.executeUpdate("delete from imenik where id='"+id+"'");
+            
+        }
+        catch(SQLException e){
+            System.err.println(e.getMessage());
+        }
+        finally {
+            try{
+                if(conn != null) conn.close();
+            }
+            catch(SQLException e){
+                System.err.println(e);
+            }
+        }
+        izpisiVseKontakte();
     }
 
     /**
      * Izpis kontakta po ID-ju
      */
     public void izpisiKontaktZaId(int id) {
+        Kontakt isci = new Kontakt();
         for(Kontakt kontakt : seznamKontaktov){
             if(kontakt.getId() == id){
-                System.out.println(kontakt.toString());
+                isci = kontakt;
+                //System.out.println(kontakt.toString());
             }
         }
-        //System.out.println("Metoda se ni implementirana");
+        if(isci.getIme() == null){
+            System.out.println("Oseba z id: " +id + " ne obstaja.");
+        }
+        else{
+            System.out.println(isci.toString());
+        }  
+        //zakljuceno
     }
 
     /**

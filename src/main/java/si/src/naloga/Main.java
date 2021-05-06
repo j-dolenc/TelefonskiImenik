@@ -3,6 +3,7 @@ package si.src.naloga;
 import si.src.naloga.imenik.TelefonskiImenik;
 import si.src.naloga.kontakt.Kontakt;
 
+import java.util.List;
 import java.util.Scanner;
 
 public class Main {
@@ -187,6 +188,21 @@ public class Main {
                     telefonskiImenik.izvoziPodatkeVCsvDatoteko(ime);
                     break;
                 }
+                case "10": {
+                    System.out.print("Vpisite iskalni niz(iz imena ali priimka): ");
+                    String niz = in.next().toLowerCase();
+                    List<Kontakt> najdeni =telefonskiImenik.isciNiz(niz);
+                    if(najdeni.size() != 0){
+                        System.out.println("Najdeni kontaki s podnizom '" + niz+"'.");
+                        for(Kontakt kontakt : najdeni){
+                            System.out.println(kontakt.toString());
+                        }
+                    }
+                    else{
+                        System.out.println("Oprostite, nasli nismo nobenega kontakta s podnizom '" + niz+"'.");
+                    }
+                    break;
+                }
                 case "0": {
                     System.exit(0);
                     break;
@@ -225,6 +241,7 @@ public class Main {
         System.out.println("7 - Shrani kontakte na disk (serializacija)");
         System.out.println("8 - Preberi kontake iz serializirano datoteke");
         System.out.println("9 - Izvozi kontakte v csv");
+        System.out.println("10 - isci kontakte po imenu ali priimku");
         System.out.println("");
         System.out.println("0 - Izhod iz aplikacije");
         System.out.println("----------------------------------");

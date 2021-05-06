@@ -316,7 +316,6 @@ public class TelefonskiImenik {
             }
 
         } catch (IOException e) {
-            //TODO: handle exception
             System.err.println(e.getMessage());
         }
         catch(ClassNotFoundException e){
@@ -370,5 +369,17 @@ public class TelefonskiImenik {
             }
         }
         
+    }
+    public List<Kontakt> isciNiz(String niz){
+        List<Kontakt> najdeni = new ArrayList<>();
+        for(Kontakt kontakt : seznamKontaktov){
+            String ime = kontakt.getIme().toLowerCase();
+            String priimek = kontakt.getPriimek().toLowerCase();
+            int nasel = 0;
+            if(ime.contains(niz) || priimek.contains(niz)){
+                najdeni.add(kontakt);
+            }
+        }
+        return najdeni;
     }
 }
